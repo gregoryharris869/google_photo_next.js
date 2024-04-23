@@ -169,6 +169,7 @@ const MediaGallery = ({ resources }: MediaGalleryProps) => {
                           height={resource.height}
                           src={resource.public_id}
                           alt=""
+                          sizes="(min-width:768px) 33vw, (min-width:1024px) 25vw,(min-width:1280px) 20vw, 50vw"
                         />
                       </Link>
                     </div>
