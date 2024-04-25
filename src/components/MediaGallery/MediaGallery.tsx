@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { Plus, X, Save } from "lucide-react";
 import { CldImage } from "next-cloudinary";
-import { useQuery } from "@tanstack/react-query";
 import Container from "@/components/Container";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -23,27 +22,16 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 
-interface CloudinaryResource {
-  height: number;
-  width: number;
-  public_id: string;
-  secure_url: string;
-}
+import { useResources } from "@/hooks/use-resources";
+
+import { CloudinaryResource } from "@/types/cloudinary";
 
 interface MediaGalleryProps {
   resources: Array<CloudinaryResource>;
 }
 
 const MediaGallery = ({ resources: initialResources }: MediaGalleryProps) => {
-  const { data: resources } = useQuery({
-    queryKey: ["resources"],
-    queryFn: async () => {
-      const { data } = await fetch("/api/resources").then((r) => r.json());
-      return data;
-    },
-    initialData: initialResources,
-  });
-  console.log("resources", resources);
+  const { resources } = useResources({ initialResources });
   const [selected, setSelected] = useState<Array<string>>([]);
   const [creation, setCreation] = useState();
 
