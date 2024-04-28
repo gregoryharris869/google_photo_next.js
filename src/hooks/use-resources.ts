@@ -3,10 +3,12 @@ import { CloudinaryResource } from "@/types/cloudinary";
 
 interface UseResources {
   initialResources?: Array<CloudinaryResource>;
+  disableFetch?: boolean;
 }
 
 export function useResources(options?: UseResources) {
   const queryClient = useQueryClient();
+  const { disableFetch = false } = options || {};
   const { data: resources } = useQuery({
     queryKey: ["resources"],
     queryFn: async () => {
@@ -14,12 +16,15 @@ export function useResources(options?: UseResources) {
       return data;
     },
     initialData: options?.initialResources,
+    enabled: !disableFetch,
   });
 
   function addResources(results: Array<CloudinaryResource>) {
     queryClient.setQueryData(
       ["resources"],
-      (old: Array<CloudinaryResource>) => [...results, ...old]
+      (old: Array<CloudinaryResource>) => {
+        return [...results, ...old];
+      }
     );
     queryClient.invalidateQueries({
       queryKey: ["resources"],
@@ -29,5 +34,4 @@ export function useResources(options?: UseResources) {
     resources,
     addResources,
   };
-  console.log("resources", resources);
 }
